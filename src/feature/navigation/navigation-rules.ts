@@ -362,12 +362,12 @@ export const buildRoutePlan = (startInput: string, targetInput: string): RoutePl
 
   return {
     ok: true,
-    title: `1층~4층에서 ${bestTargetCore.core}번 코어로 환승`,
+    title: `4층에서 ${bestTargetCore.core}번 코어로 환승`,
     start: start.unit,
     target: target.unit,
     steps: [
-      `${start.unit.label}에서 ${bestStartCore.core}번 코어 엘리베이터를 타고 1층~4층으로 이동하세요.`,
-      `1층~3층은 내부 동선으로, 4층은 공원을 통해 ${bestTargetCore.core}번 코어로 환승하세요.`,
+      `${start.unit.label}에서 ${bestStartCore.core}번 코어 엘리베이터를 타고 4층으로 이동하세요.`,
+      `4층 공원을 통해 ${bestTargetCore.core}번 코어로 환승하세요.`,
       `${target.unit.floor}층에서 내려 ${target.unit.label}로 가세요.`,
     ],
   };
