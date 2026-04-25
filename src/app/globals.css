@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+:root {
+  --background: #f7f8f5;
+  --foreground: #1e1f1a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(180deg, #fbfbf7 0%, var(--background) 42%, #eef3ef 100%);
+  color: var(--foreground);
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
