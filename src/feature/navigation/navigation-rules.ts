@@ -46,6 +46,7 @@ export type RoutePlan =
     };
 
 const CORES = [1, 2, 3, 4] as const;
+const TRANSFER_FLOORS = [1, 2, 3, 4] as const;
 const FLOOR_MIN = 4;
 const FLOOR_MAX = 25;
 
@@ -244,9 +245,9 @@ export const getCoreAccessList = (unit: ParsedUnit): CoreAccess[] => {
     const rank = isDirect ? directRank : isPossible ? getPossibleCoreRank(unit, core, directCores) : 100 + core;
 
     const messageByStatus: Record<CoreAccessStatus, string> = {
-      best: '가장 빠르게 안내할 수 있는 코어입니다.',
-      recommended: '이 호수 담당 코어라 이용하기 좋습니다.',
-      possible: '8~19층 연결 구간에서 이동 가능합니다.',
+      best: '호수 구간상 가장 가까운 담당 코어입니다.',
+      recommended: '목적지에 직접 연결되는 담당 코어입니다.',
+      possible: '8~19층 연결 구간을 통해 이동 가능합니다.',
       unavailable: getUnavailableMessage(unit, core),
     };
 
@@ -319,7 +320,10 @@ export const buildRoutePlan = (startInput: string, targetInput: string): RoutePl
     return { ok: false, message: `도착: ${target.message}` };
   }
 
-  if (start.unit.floor === target.unit.floor && isConnectedFloor(start.unit.floor)) {
+  if (
+    start.unit.floor === target.unit.floor &&
+    (isConnectedFloor(start.unit.floor) || start.unit.floor <= TRANSFER_FLOORS[TRANSFER_FLOORS.length - 1])
+  ) {
     return {
       ok: true,
       title: `${start.unit.floor}층에서 바로 이동`,
@@ -352,18 +356,18 @@ export const buildRoutePlan = (startInput: string, targetInput: string): RoutePl
   if (!bestStartCore || !bestTargetCore) {
     return {
       ok: false,
-      message: '연결 가능한 코어가 없습니다. 관리실 확인이 필요합니다.',
+      message: '연결 가능한 코어가 없습니다. 확인이 필요합니다.',
     };
   }
 
   return {
     ok: true,
-    title: `1층에서 ${bestTargetCore.core}번 코어로 환승`,
+    title: `1층~4층에서 ${bestTargetCore.core}번 코어로 환승`,
     start: start.unit,
     target: target.unit,
     steps: [
-      `${start.unit.label}에서 ${bestStartCore.core}번 코어 엘리베이터를 타고 1층으로 내려오세요.`,
-      `1층에서 ${bestTargetCore.core}번 코어 엘리베이터로 이동하세요.`,
+      `${start.unit.label}에서 ${bestStartCore.core}번 코어 엘리베이터를 타고 1층~4층으로 이동하세요.`,
+      `1층~3층은 내부 동선으로, 4층은 공원을 통해 ${bestTargetCore.core}번 코어로 환승하세요.`,
       `${target.unit.floor}층에서 내려 ${target.unit.label}로 가세요.`,
     ],
   };

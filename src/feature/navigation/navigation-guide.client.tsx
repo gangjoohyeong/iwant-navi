@@ -234,7 +234,7 @@ const SupportSection = () => (
         031-706-1600
       </a>
       <p className="mt-2 text-sm font-medium leading-relaxed text-[#667067]">
-        관리실 업무시간은 월~금 오후 6시까지, 토요일은 정오 12시까지입니다.
+        관리사무소 업무시간은 월~금 오후 6시까지, 토요일은 정오 12시까지입니다.
       </p>
     </section>
 
@@ -334,7 +334,7 @@ export function NavigationGuideClient() {
                 <div className="rounded-lg border border-[#d5dbd1] bg-white p-4 shadow-sm">
                   <p className="text-sm font-bold text-[#697269]">{parsedUnit.unit.label}</p>
                   <h2 className="mt-1 break-words text-2xl font-black leading-tight">
-                    {recommendedCore ? `${recommendedCore.core}번 코어가 가장 좋습니다` : '관리실 확인이 필요합니다'}
+                    {recommendedCore ? `${recommendedCore.core}번 코어가 가장 좋습니다` : '확인이 필요합니다'}
                   </h2>
                   <p className="mt-2 text-sm font-medium text-[#5b655d]">
                     안내판 기준으로 빠른 순서와 가능 여부를 함께 표시합니다.
