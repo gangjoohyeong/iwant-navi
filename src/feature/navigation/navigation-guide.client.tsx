@@ -294,7 +294,7 @@ export function NavigationGuideClient() {
             <span className="block">분당풍림아이원플러스 방문자 길안내</span>
           </h1>
           <p className="mt-3 text-sm font-medium leading-relaxed text-[#667067]">
-            1층~4층 출발 기준, 1~4번 코어 엘리베이터 중 목적지까지 적합한 코어를 안내합니다.
+            1층~4층 출발 기준, 1~4코어 엘리베이터 중 목적지까지 적합한 코어를 안내합니다.
           </p>
         </header>
 
@@ -334,7 +334,7 @@ export function NavigationGuideClient() {
                 <div className="rounded-lg border border-[#d5dbd1] bg-white p-4 shadow-sm">
                   <p className="text-sm font-bold text-[#697269]">{parsedUnit.unit.label}</p>
                   <h2 className="mt-1 break-words text-2xl font-black leading-tight">
-                    {recommendedCore ? `${recommendedCore.core}번 코어가 가장 좋습니다` : '확인이 필요합니다'}
+                    {recommendedCore ? `${recommendedCore.core}코어가 가장 좋습니다` : '확인이 필요합니다'}
                   </h2>
                   <p className="mt-2 text-sm font-medium text-[#5b655d]">
                     안내판 기준으로 빠른 순서와 가능 여부를 함께 표시합니다.

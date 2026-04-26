@@ -148,7 +148,7 @@ const getPossibleCoreRank = (unit: ParsedUnit, core: number, directCores: number
 
 const getUnavailableMessage = (unit: ParsedUnit, core: number) => {
   if (core === 4 && unit.floor >= 20) {
-    return '4번 코어 엘리베이터는 19층까지만 운행합니다.';
+    return '4코어 엘리베이터는 19층까지만 운행합니다.';
   }
 
   return '이 호수로는 연결되지 않습니다.';
@@ -264,7 +264,7 @@ export const getCoreAccessList = (unit: ParsedUnit): CoreAccess[] => {
       rank,
       status,
       badge: badgeByStatus[status],
-      title: `${core}번 코어`,
+      title: `${core}코어`,
       message: messageByStatus[status],
     };
   }).sort((left, right) => {
@@ -343,11 +343,11 @@ export const buildRoutePlan = (startInput: string, targetInput: string): RoutePl
   if (sharedCore) {
     return {
       ok: true,
-      title: `${sharedCore.core}번 코어로 이동`,
+      title: `${sharedCore.core}코어로 이동`,
       start: start.unit,
       target: target.unit,
       steps: [
-        `${start.unit.label}에서 ${sharedCore.core}번 코어 엘리베이터로 이동하세요.`,
+        `${start.unit.label}에서 ${sharedCore.core}코어 엘리베이터로 이동하세요.`,
         `${target.unit.floor}층에서 내려 ${target.unit.label}로 가세요.`,
       ],
     };
@@ -362,12 +362,12 @@ export const buildRoutePlan = (startInput: string, targetInput: string): RoutePl
 
   return {
     ok: true,
-    title: `4층에서 ${bestTargetCore.core}번 코어로 환승`,
+    title: `4층에서 ${bestTargetCore.core}코어로 환승`,
     start: start.unit,
     target: target.unit,
     steps: [
-      `${start.unit.label}에서 ${bestStartCore.core}번 코어 엘리베이터를 타고 4층으로 이동하세요.`,
-      `4층 공원을 통해 ${bestTargetCore.core}번 코어로 환승하세요.`,
+      `${start.unit.label}에서 ${bestStartCore.core}코어 엘리베이터를 타고 4층으로 이동하세요.`,
+      `4층 공원을 통해 ${bestTargetCore.core}코어로 환승하세요.`,
       `${target.unit.floor}층에서 내려 ${target.unit.label}로 가세요.`,
     ],
   };
