@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { FloorPlanViewer } from '@/feature/navigation/floor-plan-viewer.client';
 import {
   buildRoutePlan,
   getCoreAccessList,
@@ -262,6 +263,7 @@ const SupportSection = () => (
 
 export function NavigationGuideClient() {
   const [mode, setMode] = useState<GuideMode>('single');
+  const [showFloorPlan, setShowFloorPlan] = useState(false);
   const [singleUnit, setSingleUnit] = useState<UnitFormValue>(EMPTY_UNIT);
   const [startUnit, setStartUnit] = useState<UnitFormValue>(EMPTY_UNIT);
   const [targetUnit, setTargetUnit] = useState<UnitFormValue>(EMPTY_UNIT);
@@ -298,16 +300,31 @@ export function NavigationGuideClient() {
           </p>
         </header>
 
-        <section className="mt-6 rounded-lg border border-[#d8ddd4] bg-[#eef4ed] p-1">
-          <div className="flex gap-1">
-            <ModeButton active={mode === 'single'} onClick={() => setMode('single')}>
-              코어 찾기
-            </ModeButton>
-            <ModeButton active={mode === 'route'} onClick={() => setMode('route')}>
-              세대간 이동
-            </ModeButton>
-          </div>
-        </section>
+        <div className="mt-6 flex items-center gap-2">
+          <section className="flex-1 rounded-lg border border-[#d8ddd4] bg-[#eef4ed] p-1">
+            <div className="flex gap-1">
+              <ModeButton active={mode === 'single'} onClick={() => setMode('single')}>
+                코어 찾기
+              </ModeButton>
+              <ModeButton active={mode === 'route'} onClick={() => setMode('route')}>
+                세대간 이동
+              </ModeButton>
+            </div>
+          </section>
+          <button
+            className="flex shrink-0 flex-col items-center gap-1 rounded-lg border border-[#d8ddd4] bg-[#eef4ed] px-3 py-2 transition hover:bg-[#e4ede2] active:scale-95"
+            type="button"
+            title="오피스텔 도면 보기"
+            aria-label="오피스텔 도면 보기"
+            onClick={() => setShowFloorPlan(true)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-[#1f3c34]" aria-hidden="true">
+              <path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            <span className="text-[10px] font-black leading-none text-[#3a5249]">도면</span>
+          </button>
+        </div>
 
         {mode === 'single' ? (
           <section className="mt-4 flex flex-1 flex-col gap-4">
@@ -405,6 +422,8 @@ export function NavigationGuideClient() {
 
         <SupportSection />
       </div>
+
+      {showFloorPlan ? <FloorPlanViewer onClose={() => setShowFloorPlan(false)} /> : null}
     </main>
   );
 }
