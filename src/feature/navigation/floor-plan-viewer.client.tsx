@@ -50,22 +50,32 @@ export function FloorPlanViewer({ onClose }: Props) {
   const resetTransform = useCallback(() => setTransform({ scale: 1, x: 0, y: 0 }), []);
 
   // --- mouse/trackpad wheel zoom ---
-  const handleWheel = useCallback((event: React.WheelEvent) => {
-    event.preventDefault();
-    const rect = containerRef.current!.getBoundingClientRect();
-    const originX = event.clientX - rect.left;
-    const originY = event.clientY - rect.top;
-    const delta = -event.deltaY * 0.001;
+  // React 17+는 wheel 이벤트를 passive로 등록하므로 onWheel에서 preventDefault()가 동작하지 않음.
+  // useEffect로 non-passive 리스너를 직접 등록해야 함.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
 
-    setTransform((prev) => {
-      const nextScale = clamp(prev.scale * (1 + delta), MIN_SCALE, MAX_SCALE);
-      const ratio = nextScale / prev.scale;
-      return {
-        scale: nextScale,
-        x: originX - ratio * (originX - prev.x),
-        y: originY - ratio * (originY - prev.y),
-      };
-    });
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const originX = event.clientX - rect.left;
+      const originY = event.clientY - rect.top;
+      const delta = -event.deltaY * 0.001;
+
+      setTransform((prev) => {
+        const nextScale = clamp(prev.scale * (1 + delta), MIN_SCALE, MAX_SCALE);
+        const ratio = nextScale / prev.scale;
+        return {
+          scale: nextScale,
+          x: originX - ratio * (originX - prev.x),
+          y: originY - ratio * (originY - prev.y),
+        };
+      });
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
   // --- mouse drag ---
@@ -77,9 +87,10 @@ export function FloorPlanViewer({ onClose }: Props) {
 
   const handleMouseMove = useCallback((event: React.MouseEvent) => {
     if (!dragStart.current) return;
-    const dx = event.clientX - dragStart.current.x;
-    const dy = event.clientY - dragStart.current.y;
-    setTransform((prev) => ({ ...prev, x: dragStart.current!.tx + dx, y: dragStart.current!.ty + dy }));
+    const { x, y, tx, ty } = dragStart.current;
+    const dx = event.clientX - x;
+    const dy = event.clientY - y;
+    setTransform((prev) => ({ ...prev, x: tx + dx, y: ty + dy }));
   }, []);
 
   const handleMouseUp = useCallback(() => { dragStart.current = null; }, []);
@@ -132,9 +143,10 @@ export function FloorPlanViewer({ onClose }: Props) {
         y: originY - actualRatio * (originY0 - lastTouches.current.ty),
       });
     } else if (event.touches.length === 1 && singleDragStart.current) {
-      const dx = event.touches[0].clientX - singleDragStart.current.x;
-      const dy = event.touches[0].clientY - singleDragStart.current.y;
-      setTransform((prev) => ({ ...prev, x: singleDragStart.current!.tx + dx, y: singleDragStart.current!.ty + dy }));
+      const { x, y, tx, ty } = singleDragStart.current;
+      const dx = event.touches[0].clientX - x;
+      const dy = event.touches[0].clientY - y;
+      setTransform((prev) => ({ ...prev, x: tx + dx, y: ty + dy }));
     }
   }, []);
 
@@ -204,7 +216,6 @@ export function FloorPlanViewer({ onClose }: Props) {
       <div
         ref={containerRef}
         className="relative flex-1 select-none overflow-hidden touch-none cursor-grab active:cursor-grabbing"
-        onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
